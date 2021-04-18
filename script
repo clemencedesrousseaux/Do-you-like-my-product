@@ -1,0 +1,69 @@
+var button, textarea;
+
+function setup(){
+  button = select("button");
+  textarea = select("textarea");
+  
+  button.mousePressed(btnClicked);
+}
+
+function btnClicked(){
+  nlu(textarea.value(),nluComplete);
+}
+
+function nluComplete(response){
+  print(response);
+  
+  createElement("h2", "Sentiment analysis");
+  var sentiment = response.result.sentiment.document;
+  createSpan("Sentiment :");
+  var sentimentProgress = createElement("progress");
+  sentimentProgress.value(map(sentiment.score, -1, 1, 0, 1));
+  createSpan(round(sentiment.score * 100) + "%");
+  
+  if (sentiment.label == "positive") {
+    createSpan(":)");
+    createP("This politician is mostly <b>positive</b> in this speech ! <br /><i> That means that the speech you entered express a positive opinion on something. </i>");
+  }
+  else if(sentiment.label == neutral){
+    createSpan(":(");
+    createP("This politician is mostly <b>negative</b> in this speech ! <br /><i> That means that the speech you entered express a negative opinion on something. </i>");
+  }
+  
+  var categories = response.result.categories;
+  
+  createElement("h2", "keywords");
+  
+  createP("This speech is about : <b>" + keywords[0].label + "</b>.<br/><i> The keywords detected in the speech are separated by the / symbol, from a general theme to more specific ones. </i>");
+  
+  if (response.result.emotion){ //only with English texts
+    
+  
+  createElement("h2", "Emotional analysis");
+  
+  var emotion = response.result.emotion.document.emotion;
+  
+  createSpan("Joy");
+  var progressJoy = createElement("progress");
+  progressJoy.value(emotion.joy);
+  createSpan(round(emotion.joy * 100) + "%");
+  createElement("br")
+  
+  createSpan("Sadness");
+  var progressSadness = createElement("progress");
+  progressSadness.value(emotion.sadness);
+  createSpan(round(emotion.sadness * 100) + "%");
+  createElement("br")
+    
+  CreateSpan("Anger");
+  var progressAnger = createElement("progress");
+  progressAnger.value(emotion.anger);
+  createSpan(round(emotion.anger * 100) + "%");
+  createElement("br")
+  
+  }
+}
+
+function draw(){
+  
+}
